@@ -2,7 +2,6 @@ import cv2
 import pytesseract
 from glob import glob
 import numpy as np
-import sys
 
 img_mask = 'Pictures/*.jpg'
 img_names = glob(img_mask)
@@ -31,13 +30,10 @@ for i in text:
 		new_text.append(int(new_i))
 	except:
 		new_text.append(new_i)
-x = 1
-y = -1
-wrong = 0
+		
+x, y, wrong, total = 1, -1, 0, 0
 for i,j in enumerate(new_text):
-	if isinstance(j, int):
-		pass
-	else:
+	if not isinstance(j, int):
 		wrong += 1
 		forward = new_text[i+x]
 		backwards = new_text[i+y]
@@ -48,10 +44,7 @@ for i,j in enumerate(new_text):
 			y -= 1
 			backwards = new_text[i+y]
 		new_text[i] = int(np.mean([forward,backwards]))
-		x = 1
-		y = -1
-
-total = 0
+		x, y = 1, -1	
 for i in new_text:
 	total += i
 print(total)
