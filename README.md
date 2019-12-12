@@ -1,4 +1,4 @@
-# top200powerRoK
+# Rise Of Kingdoms Neural Nets
 Neural net to scan pictures (trained on the game Rise Of Kingdoms)
 
 This is a project done in preperation of an ingame (in the game ROK) event. 
