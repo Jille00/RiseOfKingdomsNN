@@ -15,8 +15,10 @@ This is set up so that it will scan the top200 players in the game, so it also n
 3. ReadStats. This is s program using both the NN trained in the previous parts. It takes in screenshots of the players stats
 and outputs all these stats in a csv file.
 
-TODO
+TODO:
 - welp comments are still needed
 - in the digits recognision it will often read two 4's next to eachother as one 4. This has nothing to do with the NN but more
 with openCV's countour. Still needs a fix ugh
 
+CREDITS:
+ - Abid Rahman K in https://stackoverflow.com/questions/9413216/simple-digit-recognition-ocr-in-opencv-python
