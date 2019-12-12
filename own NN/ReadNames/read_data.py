@@ -60,7 +60,7 @@ def gather_data(im):
 
 
 
-img_mask = 'Training_Pictures/*.jpg'
+img_mask = 'TrainingPictures/*.jpg'
 img_names = glob(img_mask)
 power = []
 samples =  np.empty((0,100))
