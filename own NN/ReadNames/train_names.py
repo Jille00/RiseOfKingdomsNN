@@ -114,7 +114,7 @@ if show_img == 'y':
 else:
     show_img = False
 
-img_mask = 'Testing_Pictures/*.jpg'
+img_mask = 'TestingPictures/*.jpg'
 img_names = glob(img_mask)
 names = []
 
