@@ -14,6 +14,7 @@ This is set up so that it will scan the top 200 in the game, so it needs screens
 This is set up so that it will scan the top 200 players in the game, so it also needs screenshots from the top 200 leaderboard.
 3. ReadStats. This is s program using both the NN trained in the previous parts. It takes in screenshots of the players stats
 and outputs all these stats in a csv file.
+4. It does exactly the same as ReadPower but then with a videostream instead of manually created screenshots. It does classify them wrong sometimes and therefore adds a few extra powers to overall power.
 
 TODO:
 - welp comments are still needed
