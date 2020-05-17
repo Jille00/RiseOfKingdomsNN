@@ -52,9 +52,9 @@ def chars_read(im):
 
             #if user wants images shown
             if show_img:
-                cv2.namedWindow('Phuriouz is crazy',cv2.WINDOW_NORMAL)
-                cv2.resizeWindow('Phuriouz is crazy', 1600,600)
-                cv2.imshow('Phuriouz is crazy', im)
+                cv2.namedWindow('Window',cv2.WINDOW_NORMAL)
+                cv2.resizeWindow('Window', 1600,600)
+                cv2.imshow('Window', im)
                 #show for 100 ms and check if exit called (esc key)
                 key = cv2.waitKey(0)
                 if key == 27:
