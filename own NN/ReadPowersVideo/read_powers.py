@@ -7,6 +7,7 @@ from sklearn.neural_network import MLPClassifier
 import sys
 from collections import Counter
 from os import listdir
+import pandas as pd
 
 #list for wrongly classified 
 img_list = []
@@ -55,15 +56,15 @@ def val(im):
                 cv2.resizeWindow('View Power', 1600,600)
                 cv2.imshow('View Power', im)
                 #show for 100 ms and check if exit called (esc key)
-                key = cv2.waitKey(100)
-                if key == 27:
+                key = cv2.waitKey(0)
+                if key == ord('q'):
                     sys.exit()
                 #print what the NN would classify the digits as
                 print(int(classify(samples)))
     #if full number lower than 10m, add to wrongly classified list
     try:
         classification = classify(samples)
-        if int(classification) < 10000000 and len(classification) > 4:
+        if int(classification) < 10000000 and len(classification) > 4: #and int(classification) > 400000000:
             if int(classification) not in img_list:
                 img_list.append(img)
             return False
@@ -125,78 +126,56 @@ else:
     show_img = False
 
 #ask user which kingdom to check
-dirs = listdir('Pictures/')
-kingdom = input(f"What kindom would you like to check? {[i for i in dirs]}")
-while kingdom not in dirs:
-    kingdom = input(f"Please enter correct kingdom? {[i for i in dirs]}")
-
-#get all images in kingdoms subdir
-img_mask = f'Pictures/{kingdom}/*.jpg'
-img_names = glob(img_mask)
+vs = cv2.VideoCapture('video0.mov')
 power = []
 
-#loop over all images
-for fn in img_names:
-    #read image and zoom in on power
-    img = cv2.imread(fn)
-    img = img[320:950, 1275:1430]
+while(True):
+    ret, img = vs.read()
+    # check to see if we have reached the end of the stream
+    if img is None:
+        break
+    img = cv2.resize(img, (1728, 1080))
+    y,x,_ = img.shape
+    img = img[int(y/4):y-int(y/12), int(x/1.5):x]
     # cv2.imshow('1', img)
     # cv2.waitKey(0)
+    # break
+    gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
+    thresh = cv2.adaptiveThreshold(gray,255,1,1,11,2)
 
-    #find all 6 powers in picture and append classified digits to list
-    img1 = img[0:70]
-    # cv2.imshow('1', img1)
-    # cv2.waitKey(0)
-    data = val(img1)
-    try:
-        power.append(int(classify(data)))
-    except:
-        pass
+    #find conours
+    contours,hierarchy = cv2.findContours(thresh,cv2.RETR_LIST,cv2.CHAIN_APPROX_SIMPLE)
+    #create empty return list
+    samples =  np.empty((0,100))
 
-    img2 = img[110:180]
-    # cv2.imshow('1', img2)
-    # cv2.waitKey(0)
-    data = val(img2)
-    try:
-        power.append(int(classify(data)))
-    except:
-        pass
+    #for every contour if area large enoug to be digit add the box to list
+    li = []
+    for cnt in contours:
+        if cv2.contourArea(cnt)>2000:# and cv2.contourArea(cnt)<3000:
+            [x,y,w,h] = cv2.boundingRect(cnt)
+            li.append([x,y,w,h])
+    #sort list so it read from right to left
+    li = sorted(li,key=lambda x: x[0], reverse=True)
+    #loop over all digits
+    for i in li:
+        #unpack data
+        x,y,w,h = i[0], i[1], i[2], i[3]
 
-    img3 = img[220:290]
-    # cv2.imshow('1', img3)
-    # cv2.waitKey(0)
-    data = val(img3)
-    try:
-        power.append(int(classify(data)))
-    except:
-        pass
+        #check if large enough to be digit but small enough to ignore rest
+        if  w<200 and h<50:
 
-    img4 = img[330:400]
-    # cv2.imshow('1', img4)
-    # cv2.waitKey(0)
-    data = val(img4)
-    try:
-        power.append(int(classify(data)))
-    except:
-        pass
-
-    img5 = img[440:510]
-    # cv2.imshow('1', img5)
-    # cv2.waitKey(0)
-    data = val(img5)
-    try:
-        power.append(int(classify(data)))
-    except:
-        pass    
-
-    img6 = img[550:620]
-    # cv2.imshow('1', img6)
-    # cv2.waitKey(0)
-    data = val(img6)
-    try:
-        power.append(int(classify(data)))
-    except:
-        pass
+            #draw rectangle with thresh-hold and shape correct form
+            # cv2.rectangle(img,(x,y),(x+w,y+h),(0,255,0),2)
+            im = img[y-10:y+h+10, x-10:x+w+10]
+            data = val(im)
+            try:
+                power.append(int(classify(data)))
+            except:
+                pass
+    # cv2.imshow('1', img)
+    # key = cv2.waitKey(0)
+    # if key == ord('q'):
+    #     break
 
 power = list(set(power))
 #handle wrongly classified cases 
@@ -230,19 +209,6 @@ for im in img_list:
 
 #sort whole power list from large to small
 sorted_list = sorted(power, reverse=True)
-print(f"Length is off by {len(sorted_list)-200} people")
-#remove the wrongly classified numbers
-# for i in  range(len(img_list)):
-#     sorted_list.remove(min(sorted_list))
-
-#print some statistics
-total = sum(sorted_list)
-top10 = np.sum(sorted_list[0:10])
-top25 = np.sum(sorted_list[0:25])
-top50 = np.sum(sorted_list[0:50])
-top100 = np.sum(sorted_list[0:100])
-print(f"Top 10 power is {top10} with average of {top10/10}")
-print(f"Top 25 power is {top25} with average of {top25/25}")
-print(f"Top 50 power is {top50} with average of {top50/50}")
-print(f"Top 100 power is {top100} with average of {top100/100}")
-print("Total power", total)
+df = pd.DataFrame(columns=['power'])
+df['power'] = sorted_list
+df.to_csv('full_list_t.csv')
