@@ -44,8 +44,8 @@ if download_or_not == 'y':
             file_list = drive.ListFile({'q': f"'{kds[kingdom]}' in parents"}).GetList()
             with tqdm(total=len(file_list)) as pbar1:
                 for file1 in file_list:
-                    ext = file1['title'].split('.')[1]
-                    if ext != '.jpg' or ext != '.JPG' or ext != '.png' or ext != '.PNG':
+                    ext = file1['title'].split('.')[-1]
+                    if ext != 'jpg' and ext != 'JPG' and ext != 'png' and ext != 'PNG':
                         continue
                     file6 = drive.CreateFile({'id': file1['id']})
                     my_file = Path(path + '/' + file1['title'])
