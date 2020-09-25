@@ -67,7 +67,7 @@ def val(im):
     #if full number lower than 10m, add to wrongly classified list
     try:
         classification = classify(samples)
-        if int(classification) < 10000000 and len(classification) > 4 or int(classification) > 400000000:
+        if int(classification) < 20000000 and len(classification) > 4 or int(classification) > 400000000:
             if int(classification) not in img_list:
                 img_list.append(img)
                 classi.append(classification)
@@ -112,6 +112,8 @@ for kingdom in dirs:
     # if kingdom == '1359':
     #     show_img=True
     power = []
+    img_list = []
+    classi = []
     path = 'TestingPictures/' + kingdom + '/'
     for filename in os.listdir(path):
         if filename.endswith(".jpg") or filename.endswith(".png") or filename.endswith(".PNG") or filename.endswith(".JPG"):
