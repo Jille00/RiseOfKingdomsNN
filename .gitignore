@@ -1,2 +1,5 @@
 .jpg
 /own NN/ReadStats/TestingPictures/
+/own NN/ReadPowersVideo/final_model
+/own NN/ReadPowersVideo/pytorch_model
+/own NN/ReadPowersVideo/pytorch_model.model
