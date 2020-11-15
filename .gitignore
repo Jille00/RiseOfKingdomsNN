@@ -3,3 +3,10 @@
 /own NN/ReadPowersVideo/final_model
 /own NN/ReadPowersVideo/pytorch_model
 /own NN/ReadPowersVideo/pytorch_model.model
+/own NN/Fullversion/Read300/TestingPictures/
+/own NN/Fullversion/Read300/client_secrets.json
+/own NN/Fullversion/Read300/*.sav
+/own NN/Fullversion/Read300/settings.yaml
+/own NN/Fullversion/Read300/mycreds.txt
+/own NN/Fullversion/ReadStats/TestingPictures/
+/own NN/Fullversion/ReadStats/*.sav
